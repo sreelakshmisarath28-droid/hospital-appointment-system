@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-title">
+    <h1>All Appointments</h1>
+    <p>View and manage all patient appointments</p>
+</div>
+
+<div style="text-align:right; margin-bottom:15px;">
+    <a href="{{ url_for('book') }}" class="btn-main">+ Book New Appointment</a>
+</div>
+
+{% if appointments %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th>Department</th>
+            <th>Doctor Assigned</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Symptoms</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in appointments %}
+        <tr>
+            <td>{{ row['APPOINTMENT_ID'] }}</td>
+            <td>{{ row['PATIENT_NAME'] }}</td>
+            <td>{{ row['AGE'] }}</td>
+            <td>{{ row['GENDER'] }}</td>
+            <td>{{ row['CONTACT'] }}</td>
+            <td>{{ row['DEPARTMENT'] }}</td>
+            <td>{{ row['DOCTOR_NAME'] }}</td>
+            <td>{{ row['APPOINTMENT_DATE'] }}</td>
+            <td>{{ row['APPOINTMENT_TIME'] }}</td>
+            <td>{{ row['SYMPTOMS'] }}</td>
+            <td>
+                <span class="badge badge-{{ 'success' if row['STATUS']=='Confirmed' else 'danger' }}">
+                    {{ row['STATUS'] }}
+                </span>
+            </td>
+            <td>
+                {% if row['STATUS'] == 'Confirmed' %}
+                <a href="{{ url_for('cancel', appt_id=row['APPOINTMENT_ID']) }}"
+                   class="btn-cancel"
+                   onclick="return confirm('Cancel this appointment?')">Cancel</a>
+                {% else %}
+                <span style="color:gray;">—</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="no-data">No appointments found. <a href="{{ url_for('book') }}">Book one now!</a></p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-title">
+    <h1>Search Appointments</h1>
+    <p>Search by patient name, doctor, department or status</p>
+</div>
+
+<div class="form-card">
+    <form method="POST" action="{{ url_for('search') }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Search By</label>
+                <select name="search_by" required>
+                    <option value="Patient Name" {% if search_by=='Patient Name' %}selected{% endif %}>Patient Name</option>
+                    <option value="Doctor Name"  {% if search_by=='Doctor Name'  %}selected{% endif %}>Doctor Name</option>
+                    <option value="Department"   {% if search_by=='Department'   %}selected{% endif %}>Department</option>
+                    <option value="Status"       {% if search_by=='Status'       %}selected{% endif %}>Status</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Search Value</label>
+                <input type="text" name="search_val" value="{{ search_val }}" placeholder="Type to search..." required>
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <button type="submit" class="btn-main">Search</button>
+            <a href="{{ url_for('search') }}" class="btn-secondary">Clear</a>
+        </div>
+    </form>
+</div>
+
+{% if results %}
+<div class="section-title">Search Results ({{ results|length }} found)</div>
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Contact</th>
+            <th>Department</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in results %}
+        <tr>
+            <td>{{ row['APPOINTMENT_ID'] }}</td>
+            <td>{{ row['PATIENT_NAME'] }}</td>
+            <td>{{ row['AGE'] }}</td>
+            <td>{{ row['CONTACT'] }}</td>
+            <td>{{ row['DEPARTMENT'] }}</td>
+            <td>{{ row['DOCTOR_NAME'] }}</td>
+            <td>{{ row['APPOINTMENT_DATE'] }}</td>
+            <td>{{ row['APPOINTMENT_TIME'] }}</td>
+            <td>
+                <span class="badge badge-{{ 'success' if row['STATUS']=='Confirmed' else 'danger' }}">
+                    {{ row['STATUS'] }}
+                </span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif request.method == 'POST' %}
+<p class="no-data">No results found for your search.</p>
+{% endif %}
+
+{% endblock %}

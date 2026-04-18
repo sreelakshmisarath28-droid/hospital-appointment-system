@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-title">
+    <h1>Our Doctors</h1>
+    <p>List of all doctors and their availability</p>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Doctor Name</th>
+            <th>Department</th>
+            <th>Qualification</th>
+            <th>Experience</th>
+            <th>Available Days</th>
+            <th>Max Patients</th>
+            <th>Current Patients</th>
+            <th>Availability</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doc in doctors %}
+        <tr>
+            <td>{{ doc['DOCTOR_ID'] }}</td>
+            <td>{{ doc['DOCTOR_NAME'] }}</td>
+            <td>{{ doc['DEPARTMENT'] }}</td>
+            <td>{{ doc['QUALIFICATION'] }}</td>
+            <td>{{ doc['EXPERIENCE'] }}</td>
+            <td>{{ doc['AVAILABLE_DAYS'] }}</td>
+            <td>{{ doc['MAX_PATIENTS'] }}</td>
+            <td>{{ doc['CURRENT_PATIENTS'] }}</td>
+            <td>
+                {% if doc['CURRENT_PATIENTS'] < doc['MAX_PATIENTS'] %}
+                <span class="badge badge-success">Available</span>
+                {% else %}
+                <span class="badge badge-danger">Full</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

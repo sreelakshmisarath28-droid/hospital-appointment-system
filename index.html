@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-title">
+    <h1>Welcome to Hospital Appointment System</h1>
+    <p>Smart scheduling system — doctor is automatically assigned based on availability</p>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_appointments }}</div>
+        <div class="stat-label">Total Appointments</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_doctors }}</div>
+        <div class="stat-label">Total Doctors</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ confirmed }}</div>
+        <div class="stat-label">Confirmed Today</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ departments|length }}</div>
+        <div class="stat-label">Departments</div>
+    </div>
+</div>
+
+<div class="section-title">Departments Available</div>
+<div class="dept-grid">
+    {% for dept in departments %}
+    <div class="dept-card">
+        <div class="dept-icon">🏥</div>
+        <div class="dept-name">{{ dept }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="section-title">Recent Appointments</div>
+{% if recent %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient Name</th>
+            <th>Department</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in recent %}
+        <tr>
+            <td>{{ row['APPOINTMENT_ID'] }}</td>
+            <td>{{ row['PATIENT_NAME'] }}</td>
+            <td>{{ row['DEPARTMENT'] }}</td>
+            <td>{{ row['DOCTOR_NAME'] }}</td>
+            <td>{{ row['APPOINTMENT_DATE'] }}</td>
+            <td>{{ row['APPOINTMENT_TIME'] }}</td>
+            <td><span class="badge badge-{{ 'success' if row['STATUS']=='Confirmed' else 'danger' }}">{{ row['STATUS'] }}</span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="no-data">No appointments yet. <a href="{{ url_for('book') }}">Book one now!</a></p>
+{% endif %}
+
+<div style="text-align:center; margin-top:30px;">
+    <a href="{{ url_for('book') }}" class="btn-main">+ Book New Appointment</a>
+</div>
+
+{% endblock %}
